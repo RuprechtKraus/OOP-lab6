@@ -10,15 +10,15 @@ enum class Protocol
 class HttpUrl
 {
 public:
+	HttpUrl() = delete;
+
 	explicit HttpUrl(const std::string& url);
-	HttpUrl(std::string const& domain,
-		std::string const& document,
+
+	HttpUrl(std::string const& domain, std::string const& document, 
 		Protocol protocol = Protocol::HTTP);
-	HttpUrl(
-		std::string const& domain,
-		std::string const& document,
-		Protocol protocol,
-		unsigned short port);
+
+	HttpUrl(std::string const& domain, std::string const& document, 
+		Protocol protocol, unsigned short port);
 
 	std::string GetURL() const noexcept;
 	std::string GetDomain() const noexcept;
@@ -32,3 +32,5 @@ private:
 	Protocol m_protocol{};
 	unsigned short m_port{};
 };
+
+std::string ProtocolToString(Protocol protocol);
