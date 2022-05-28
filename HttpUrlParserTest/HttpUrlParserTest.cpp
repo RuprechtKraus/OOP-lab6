@@ -81,5 +81,33 @@ namespace HttpUrlParserTest
 			auto createHttpUrl = [&url]() { HttpUrl httpUrl(url); };
 			Assert::ExpectException<UrlParsingError>(createHttpUrl, L"Created HttpUrl with missing domain");
 		}
+
+		TEST_METHOD(ConstructHttpUrlProvidingDomainAndDocument)
+		{
+			HttpUrl httpUrl("www.cplusplus.com", "articles/cpp11/");
+			VerifyHttpUrl(httpUrl, "http://www.cplusplus.com/articles/cpp11/", 
+				"www.cplusplus.com", "/articles/cpp11/", Protocol::HTTP, 80);
+		}
+
+		TEST_METHOD(ConstructHttpUrlProvidingDomainAndEmptyDocument)
+		{
+			HttpUrl httpUrl("www.cplusplus.com", "");
+			VerifyHttpUrl(httpUrl, "http://www.cplusplus.com/",
+				"www.cplusplus.com", "/", Protocol::HTTP, 80);
+		}
+
+		TEST_METHOD(ConstructHttpUrlProvidingDomainDocumentProtocol)
+		{
+			HttpUrl httpUrl("www.cplusplus.com", "articles/cpp11/", Protocol::HTTPS);
+			VerifyHttpUrl(httpUrl, "https://www.cplusplus.com/articles/cpp11/",
+				"www.cplusplus.com", "/articles/cpp11/", Protocol::HTTPS, 443);
+		}
+
+		TEST_METHOD(ConstructHttpUrlProvidingDomainDocumentProtocolPort)
+		{
+			HttpUrl httpUrl("www.cplusplus.com", "articles/cpp11/", Protocol::HTTPS, 5050);
+			VerifyHttpUrl(httpUrl, "https://www.cplusplus.com:5050/articles/cpp11/",
+				"www.cplusplus.com", "/articles/cpp11/", Protocol::HTTPS, 5050);
+		}
 	};
 }

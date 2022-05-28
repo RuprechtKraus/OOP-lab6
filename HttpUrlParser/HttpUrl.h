@@ -6,8 +6,6 @@
 class HttpUrl
 {
 public:
-	HttpUrl() = delete;
-
 	explicit HttpUrl(const std::string& url);
 
 	HttpUrl(const std::string& domain, const std::string& document,
