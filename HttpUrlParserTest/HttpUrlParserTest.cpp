@@ -72,7 +72,7 @@ namespace HttpUrlParserTest
 		{
 			std::string url("http://google.com:99999");
 			auto createHttpUrl = [&url]() { HttpUrl httpUrl(url); };
-			Assert::ExpectException<UrlParsingError>(createHttpUrl, L"Created HttpUrl with incorrect port");
+			Assert::ExpectException<std::invalid_argument>(createHttpUrl, L"Created HttpUrl with incorrect port");
 		}
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithNoDomain)

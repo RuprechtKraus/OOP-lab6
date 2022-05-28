@@ -1,8 +1,7 @@
-﻿#include <iostream>
-#include "HttpUrl.h"
+﻿#include "HttpUrl.h"
 #include "UrlParsingError.h"
+#include <iostream>
 
 int main()
 {
-
 }

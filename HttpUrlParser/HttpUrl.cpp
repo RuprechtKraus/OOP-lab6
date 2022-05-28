@@ -6,21 +6,45 @@ const std::string HttpUrl::m_urlPattern{
 	R"(^(?:(http(?:s)?)?:\/\/)?([a-zA-Z.]*.(?:com|ru|org))(?::(\d+))?(\/[\w\d\?\.\/#,;_=!&\+\*]*)?$)"
 };
 
+const std::string HttpUrl::m_domainPattern{
+	R"([a-zA-Z.]*.(?:com|ru|org))"
+};
+
 HttpUrl::HttpUrl(const std::string& url)
 {
 	ParseUrl(url);
 }
 
-HttpUrl::HttpUrl(std::string const& domain, std::string const& document,
+HttpUrl::HttpUrl(const std::string& domain, const std::string& document,
 	Protocol protocol)
+	: HttpUrl(domain, document, protocol, GetDefaultPortForProtocol(protocol))
 {
-	throw std::logic_error("Method is not implemented");
 }
 
-HttpUrl::HttpUrl(std::string const& domain, std::string const& document,
+HttpUrl::HttpUrl(const std::string& domain, const std::string& document,
 	Protocol protocol, unsigned short port)
 {
-	throw std::logic_error("Method is not implemented");
+	std::regex rgx(m_domainPattern);
+
+	if (std::regex_match(domain, rgx))
+	{
+		std::string tmpDomain(domain);
+		std::string tmpDocument(AddFrontSlashToDocument(document));
+
+		if (!IsPortCorrect(port))
+		{
+			throw std::invalid_argument("Port is less than 1 or greater than 65535");
+		}
+
+		std::swap(m_domain, tmpDomain);
+		std::swap(m_document, tmpDocument);
+		m_protocol = protocol;
+		m_port = port;
+	}
+	else
+	{
+		throw std::invalid_argument("Incorrect domain");
+	}
 }
 
 std::string HttpUrl::GetURL() const noexcept
@@ -75,63 +99,63 @@ void HttpUrl::ParseUrl(const std::string& url)
 
 void HttpUrl::SetFields(const std::smatch& matches)
 {
-	SetProtocol(matches);
-	SetDomain(matches);
-	SetPort(matches);
-	SetDocument(matches);
+	Protocol protocol{ GetProtocolFromMatches(matches) };
+	HttpUrl tmp(GetDomainFromMatches(matches), GetDocumentFromMatches(matches), 
+		protocol, GetPortFromMatches(matches, protocol));
+	std::swap(*this, tmp);
 }
 
-void HttpUrl::SetProtocol(const std::smatch& matches)
+Protocol HttpUrl::GetProtocolFromMatches(const std::smatch& matches)
 {
 	if (matches[1].matched)
 	{
-		m_protocol = StringToProtocol(matches[1].str());
+		return StringToProtocol(matches[1].str());
 	}
 	else
 	{
-		m_protocol = Protocol::HTTP;
+		return Protocol::HTTP;
 	}
 }
 
-void HttpUrl::SetDomain(const std::smatch& matches)
+std::string HttpUrl::GetDomainFromMatches(const std::smatch& matches)
 {
-	m_domain = matches[2].str();
+	return matches[2].str();
 }
 
-void HttpUrl::SetPort(const std::smatch& matches)
+unsigned short HttpUrl::GetPortFromMatches(const std::smatch& matches, Protocol protocol)
 {
 	if (matches[3].matched)
 	{
 		int port{ std::stoi(matches[3].str()) };
 
-		if (port < 1 || port > 65535)
+		if (!IsPortCorrect(port))
 		{
-			throw UrlParsingError("Port is less than 1 or greater than 65535");
+			throw std::invalid_argument("Port is less than 1 or greater than 65535");
 		}
 
-		m_port = port;
+		return port;
 	}
 	else
 	{
-		m_port = GetDefaultPortForProtocol(m_protocol);
+		return GetDefaultPortForProtocol(protocol);
 	}
 }
 
-void HttpUrl::SetDocument(const std::smatch& matches)
+std::string HttpUrl::GetDocumentFromMatches(const std::smatch& matches)
 {
 	if (matches[4].matched)
 	{
-		m_document = matches[4].str();
+		return matches[4].str();
 	}
 	else
 	{
-		m_document = "/";
+		return "/";
 	}
 }
 
-int HttpUrl::GetDefaultPortForProtocol(Protocol protocol)
+unsigned short HttpUrl::GetDefaultPortForProtocol(Protocol protocol)
 {
-	switch (m_protocol)
+	switch (protocol)
 	{
 	case Protocol::HTTP:
 		return 80;
@@ -140,4 +164,23 @@ int HttpUrl::GetDefaultPortForProtocol(Protocol protocol)
 	default:
 		throw std::invalid_argument("Unexpected protocol");
 	}
+}
+
+bool HttpUrl::IsPortCorrect(int port) noexcept
+{
+	return port >= 1 && port <= 65535;
+}
+
+std::string HttpUrl::AddFrontSlashToDocument(const std::string& document)
+{
+	if (document.empty())
+	{
+		return "/";
+	}
+	else if (document[0] != '/')
+	{
+		return "/" + document;
+	}
+
+	return document;
 }

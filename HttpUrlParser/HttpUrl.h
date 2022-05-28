@@ -10,10 +10,10 @@ public:
 
 	explicit HttpUrl(const std::string& url);
 
-	HttpUrl(std::string const& domain, std::string const& document,
+	HttpUrl(const std::string& domain, const std::string& document,
 		Protocol protocol = Protocol::HTTP);
 
-	HttpUrl(std::string const& domain, std::string const& document,
+	HttpUrl(const std::string& domain, const std::string& document,
 		Protocol protocol, unsigned short port);
 
 	std::string GetURL() const noexcept;
@@ -25,15 +25,21 @@ public:
 private:
 	void ParseUrl(const std::string& url);
 	void SetFields(const std::smatch& matches);
-	void SetProtocol(const std::smatch& matches);
-	void SetDomain(const std::smatch& matches);
-	void SetPort(const std::smatch& matches);
-	void SetDocument(const std::smatch& matches);
-	int GetDefaultPortForProtocol(Protocol protocol);
+	Protocol GetProtocolFromMatches(const std::smatch& matches);
+	std::string GetDomainFromMatches(const std::smatch& matches);
+	std::string GetDocumentFromMatches(const std::smatch& matches);
+	unsigned short GetPortFromMatches(const std::smatch& matches, 
+		[[maybe_unused]] Protocol protocol = Protocol::HTTP);
+
+	static unsigned short GetDefaultPortForProtocol(Protocol protocol);
+	static bool IsPortCorrect(int port) noexcept;
+	std::string AddFrontSlashToDocument(const std::string& document);
 
 	std::string m_domain{};
 	std::string m_document{};
 	Protocol m_protocol{};
 	unsigned short m_port{};
+
 	static const std::string m_urlPattern;
+	static const std::string m_domainPattern;
 };

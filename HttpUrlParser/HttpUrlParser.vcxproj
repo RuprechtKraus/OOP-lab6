@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="HttpUrl.cpp" />
     <ClCompile Include="HttpUrlParser.cpp" />
+    <ClCompile Include="Protocol.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Protocol.h" />
