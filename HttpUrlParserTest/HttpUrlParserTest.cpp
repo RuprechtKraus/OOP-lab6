@@ -35,7 +35,7 @@ namespace HttpUrlParserTest
 		{
 			std::string url("https://wikipedia.org/wiki/Main_Page");
 			HttpUrl httpUrl(url);
-			VerifyHttpUrl(httpUrl, url, "wikipedia.org", "wiki/Main_Page", Protocol::HTTPS, 443);
+			VerifyHttpUrl(httpUrl, url, "wikipedia.org", "/wiki/Main_Page", Protocol::HTTPS, 443);
 		}
 
 		TEST_METHOD(ConstructHttpsUrlFromStringWithoutPortWithDocument)
@@ -58,21 +58,21 @@ namespace HttpUrlParserTest
 		{
 			std::string url("http://google.com:903");
 			HttpUrl httpUrl(url);
-			VerifyHttpUrl(httpUrl, url, "google.com", "/", Protocol::HTTP, 903);
+			VerifyHttpUrl(httpUrl, "http://google.com:903/", "google.com", "/", Protocol::HTTP, 903);
 		}
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithNoProtocol)
 		{
 			std::string url("google.com/some_document");
 			HttpUrl httpUrl(url);
-			VerifyHttpUrl(httpUrl, url, "google.com", "/some_document", Protocol::HTTP, 80);
+			VerifyHttpUrl(httpUrl, "http://google.com/some_document", "google.com", "/some_document", Protocol::HTTP, 80);
 		}
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithInvalidPort)
 		{
 			std::string url("http://google.com:99999");
 			auto createHttpUrl = [&url]() { HttpUrl httpUrl(url); };
-			Assert::ExpectException<UrlParsingError>(createHttpUrl, L"Created HttpUrl with invalid port");
+			Assert::ExpectException<UrlParsingError>(createHttpUrl, L"Created HttpUrl with incorrect port");
 		}
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithNoDomain)

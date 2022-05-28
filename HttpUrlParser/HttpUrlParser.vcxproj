@@ -135,6 +135,8 @@
     <ClCompile Include="HttpUrlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Protocol.h" />
+    <ClInclude Include="StringLib.h" />
     <ClInclude Include="UrlParsingError.h" />
     <ClInclude Include="HttpUrl.h" />
   </ItemGroup>
