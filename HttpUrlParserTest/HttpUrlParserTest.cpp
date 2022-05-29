@@ -56,9 +56,9 @@ namespace HttpUrlParserTest
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithPortWithoutDocument)
 		{
-			std::string url("http://google.com:903");
+			std::string url("http://google.com:900");
 			HttpUrl httpUrl(url);
-			VerifyHttpUrl(httpUrl, "http://google.com:903/", "google.com", "/", Protocol::HTTP, 903);
+			VerifyHttpUrl(httpUrl, "http://google.com:900/", "google.com", "/", Protocol::HTTP, 900);
 		}
 
 		TEST_METHOD(ConstructHttpUrlFromStringWithNoProtocol)

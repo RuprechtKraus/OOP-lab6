@@ -7,7 +7,7 @@ const std::string HttpUrl::m_urlPattern{
 };
 
 const std::string HttpUrl::m_domainPattern{
-	R"([a-zA-Z.]*.(?:com|ru|org))"
+	R"(^[a-zA-Z.]*.(?:com|ru|org)$)"
 };
 
 HttpUrl::HttpUrl(const std::string& url)
