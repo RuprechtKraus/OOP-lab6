@@ -83,5 +83,18 @@ namespace StringListTest
 			list.PushFront(str2);
 			VerityStringList(list, 2, false, str2, str1);
 		}
+
+		TEST_METHOD(ClearList)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+
+			list.PushFront(str1);
+			list.PushFront(str2);
+			list.Clear();
+
+			VerityStringList(list, 0, true, std::nullopt, std::nullopt);
+		}
 	};
 }

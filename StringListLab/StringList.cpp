@@ -9,9 +9,14 @@ StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node
 	std::cout << "Node with value \"" << m_data << "\" has been created" << std::endl;
 }
 
-StringList::Node::~Node()
+StringList::Node::~Node() noexcept
 {
 	std::cout << "Node with value \"" << m_data << "\" has been destroyed" << std::endl;
+}
+
+StringList::~StringList() noexcept
+{
+	Clear();
 }
 
 void StringList::PushBack(const std::string& str)
@@ -50,9 +55,12 @@ void StringList::PushFront(const std::string& str)
 	m_size++;
 }
 
-void StringList::Clear()
+void StringList::Clear() noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	while (m_first)
+	{
+		m_first = std::move(m_first->m_next);
+	}
 }
 
 bool StringList::IsEmpty() const noexcept
@@ -60,25 +68,25 @@ bool StringList::IsEmpty() const noexcept
 	return !m_first.get();
 }
 
-std::string& StringList::GetBackElement()
+std::string& StringList::GetBackElement() noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetBackElement called on empty list");
 	return m_last->m_data;
 }
 
-const std::string& StringList::GetBackElement() const
+const std::string& StringList::GetBackElement() const noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetBackElement called on empty list");
 	return m_last->m_data;
 }
 
-std::string& StringList::GetFrontElement()
+std::string& StringList::GetFrontElement() noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetFrontElement called on empty list");
 	return m_first->m_data;
 }
 
-const std::string& StringList::GetFrontElement() const
+const std::string& StringList::GetFrontElement() const noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetFrontElement called on empty list");
 	return m_first->m_data;
