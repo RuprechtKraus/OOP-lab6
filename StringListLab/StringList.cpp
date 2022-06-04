@@ -179,6 +179,7 @@ StringListConstIterator::StringListConstIterator(NodePtr ptr, const Container* c
 
 StringListConstIterator::reference StringListConstIterator::operator*() const noexcept
 {
+	_STL_ASSERT(m_container, "Cannot dereference value-initialized list iterator");
 	_STL_ASSERT(m_ptr != nullptr, "Cannot dereference end list iterator");
 	return m_ptr->m_data;
 }
@@ -220,17 +221,20 @@ StringListConstIterator& StringListConstIterator::operator--() noexcept
 
 StringListConstIterator StringListConstIterator::operator--(int) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	StringListConstIterator tmp{ *this };
+	--*this;
+	return tmp;
 }
 
 bool operator==(const StringListConstIterator& left, const StringListConstIterator& right) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	_STL_ASSERT(left.m_container == right.m_container, "List iterators incompatible");
+	return left.m_ptr == right.m_ptr;
 }
 
 bool operator!=(const StringListConstIterator& left, const StringListConstIterator& right) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	return !(left == right);
 }
 
 #pragma endregion StringListConstIterator

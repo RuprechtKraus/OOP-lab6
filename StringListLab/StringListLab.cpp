@@ -11,12 +11,10 @@ int main()
 	sl.PushBack(str1);
 	sl.PushBack(str2);
 	//sl.PushBack(str3);
-
 	std::cout << std::endl;
 
-	auto it{ sl.cend() };
-	--it;
-	std::cout << *it << std::endl;
+	auto it{ sl.cbegin() };
+	std::cout << "" << std::endl;
 
 	std::cout << std::endl;
 
