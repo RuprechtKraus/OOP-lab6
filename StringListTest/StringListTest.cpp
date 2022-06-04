@@ -97,4 +97,14 @@ namespace StringListTest
 			VerityStringList(list, 0, true, std::nullopt, std::nullopt);
 		}
 	};
+
+	TEST_CLASS(StringListConstIteratorTest)
+	{
+	public:
+
+		TEST_METHOD(DereferenceIterator)
+		{
+
+		}
+	};
 }

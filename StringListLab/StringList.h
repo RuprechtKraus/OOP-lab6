@@ -38,6 +38,19 @@ public:
 	ConstReference GetFrontElement() const noexcept;
 	size_t GetSize() const noexcept;
 
+	Iterator begin() noexcept;
+	Iterator end() noexcept;
+	ConstIterator begin() const noexcept;
+	ConstIterator end() const noexcept;
+	ConstIterator cbegin() const noexcept;
+	ConstIterator cend() const noexcept;
+	ReverseIterator rbegin() noexcept;
+	ReverseIterator rend() noexcept;
+	ConstReverseIterator rbegin() const noexcept;
+	ConstReverseIterator rend() const noexcept;
+	ConstReverseIterator crbegin() const noexcept;
+	ConstReverseIterator crend() const noexcept;
+
 private:
 	size_t m_size{};
 	Node* m_last{};
@@ -46,6 +59,8 @@ private:
 
 class StringListConstIterator
 {
+	friend class StringList;
+
 public:
 	using iterator_category = std::bidirectional_iterator_tag;
 	using difference_type = std::ptrdiff_t;
@@ -87,5 +102,16 @@ public:
 	using reference = value_type&;
 	using Container = StringList;
 
+	StringListIterator() noexcept;
+
+	reference operator*() const noexcept;
+	pointer operator->() const noexcept;
+
+	StringListIterator& operator++() noexcept;
+	StringListIterator operator++(int) noexcept;
+	StringListIterator& operator--() noexcept;
+	StringListIterator operator--(int) noexcept;
+
 private:
+	StringListIterator(NodePtr ptr, const Container* container) noexcept;
 };

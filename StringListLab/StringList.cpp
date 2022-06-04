@@ -101,6 +101,66 @@ size_t StringList::GetSize() const noexcept
 	return m_size;
 }
 
+StringList::Iterator StringList::begin() noexcept
+{
+	return Iterator(m_first.get(), this);
+}
+
+StringList::Iterator StringList::end() noexcept
+{
+	return Iterator(nullptr, this);
+}
+
+StringList::ConstIterator StringList::begin() const noexcept
+{
+	return ConstIterator(m_first.get(), this);
+}
+
+StringList::ConstIterator StringList::end() const noexcept
+{
+	return ConstIterator(nullptr, this);
+}
+
+StringList::ConstIterator StringList::cbegin() const noexcept
+{
+	return begin();
+}
+
+StringList::ConstIterator StringList::cend() const noexcept
+{
+	return end();
+}
+
+StringList::ReverseIterator StringList::rbegin() noexcept
+{
+	return ReverseIterator(end());
+}
+
+StringList::ReverseIterator StringList::rend() noexcept
+{
+	return ReverseIterator(begin());
+}
+
+StringList::ConstReverseIterator StringList::rbegin() const noexcept
+{
+	return ConstReverseIterator(end());
+}
+
+StringList::ConstReverseIterator StringList::rend() const noexcept
+{
+	return ConstReverseIterator(begin());
+}
+
+StringList::ConstReverseIterator StringList::crbegin() const noexcept
+{
+	return rbegin();
+}
+
+StringList::ConstReverseIterator StringList::crend() const noexcept
+{
+	return rend();
+}
+
 #pragma endregion StringList
 
 #pragma region StringListConstIterator
@@ -119,7 +179,8 @@ StringListConstIterator::StringListConstIterator(NodePtr ptr, const Container* c
 
 StringListConstIterator::reference StringListConstIterator::operator*() const noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	_STL_ASSERT(m_ptr != nullptr, "Cannot dereference end list iterator");
+	return m_ptr->m_data;
 }
 
 StringListConstIterator::pointer StringListConstIterator::operator->() const noexcept
@@ -158,3 +219,47 @@ bool operator!=(const StringListConstIterator& left, const StringListConstIterat
 }
 
 #pragma endregion StringListConstIterator
+
+#pragma region StringListIterator
+
+StringListIterator::StringListIterator() noexcept
+	: StringListConstIterator(nullptr, nullptr)
+{
+}
+
+StringListIterator::StringListIterator(NodePtr ptr, const Container* container) noexcept
+	: StringListConstIterator(ptr, container)
+{
+}
+
+StringListIterator::reference StringListIterator::operator*() const noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListIterator::pointer StringListIterator::operator->() const noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListIterator& StringListIterator::operator++() noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListIterator StringListIterator::operator++(int) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListIterator& StringListIterator::operator--() noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListIterator StringListIterator::operator--(int) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+#pragma endregion StringListIterator
