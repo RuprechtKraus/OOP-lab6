@@ -19,7 +19,7 @@ void StringList::PushBack(const std::string& str)
 	auto node{ std::make_unique<Node>(str, m_last, nullptr) };
 	Node* newLast{ node.get() };
 
-	if (m_first)
+	if (m_last)
 	{
 		m_last->m_next = std::move(node);
 	}
@@ -34,13 +34,20 @@ void StringList::PushBack(const std::string& str)
 
 void StringList::PushFront(const std::string& str)
 {
-	/*auto node{ std::make_unique<Node>(str, nullptr, m_first) };
-	m_first = std::move(node);
+	auto node{ std::make_unique<Node>(str, nullptr, std::move(m_first)) };
+	Node* newFirst{ node.get() };
 
+	m_first = std::move(node);
 	if (m_last)
 	{
+		m_first->m_next->m_prev = newFirst;
+	}
+	else
+	{
+		m_last = newFirst;
+	}
 
-	}*/
+	m_size++;
 }
 
 void StringList::Clear()

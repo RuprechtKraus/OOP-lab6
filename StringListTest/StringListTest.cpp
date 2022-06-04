@@ -64,5 +64,24 @@ namespace StringListTest
 			list.PushBack(str2);
 			VerityStringList(list, 2, false, str1, str2);
 		}
+
+		TEST_METHOD(PushFrontOneElement)
+		{
+			StringList list;
+			std::string str("New string");
+			list.PushFront(str);
+			VerityStringList(list, 1, false, str, str);
+		}
+
+		TEST_METHOD(PushFrontTwoElements)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+
+			list.PushFront(str1);
+			list.PushFront(str2);
+			VerityStringList(list, 2, false, str2, str1);
+		}
 	};
 }

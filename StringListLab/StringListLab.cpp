@@ -1,10 +1,5 @@
-﻿#include "StringList.h"
-#include <iostream>
-#include <list>
+﻿#include <iostream>
 
 int main()
 {
-	StringList sl;
-	std::string str1("First string");
-	std::string str2("Second string");
 }
