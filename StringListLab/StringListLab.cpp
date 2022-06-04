@@ -5,9 +5,6 @@
 int main()
 {
 	StringList sl;
-	sl.PushBack("Back element string");
-	std::cout << sl.GetFrontElement() << std::endl;
-
-	std::list<int> lt;
-	lt.clear();
+	std::string str1("First string");
+	std::string str2("Second string");
 }

@@ -17,7 +17,7 @@ StringList::Node::~Node()
 void StringList::PushBack(const std::string& str)
 {
 	auto node{ std::make_unique<Node>(str, m_last, nullptr) };
-	m_last = node.get();
+	Node* newLast{ node.get() };
 
 	if (m_first)
 	{
@@ -27,13 +27,20 @@ void StringList::PushBack(const std::string& str)
 	{
 		m_first = std::move(node);
 	}
+	m_last = newLast;
 
 	m_size++;
 }
 
 void StringList::PushFront(const std::string& str)
 {
-	throw std::logic_error("Method is not implemented");
+	/*auto node{ std::make_unique<Node>(str, nullptr, m_first) };
+	m_first = std::move(node);
+
+	if (m_last)
+	{
+
+	}*/
 }
 
 void StringList::Clear()
