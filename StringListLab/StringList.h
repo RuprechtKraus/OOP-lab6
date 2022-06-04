@@ -4,7 +4,9 @@
 
 class StringList
 {
-private:
+	friend class StringListIterator;
+	friend class StringListConstIterator;
+
 	class Node
 	{
 	public:
@@ -17,6 +19,10 @@ private:
 	};
 
 public:
+	using Iterator = StringListIterator;
+	using ConstIterator = StringListConstIterator;
+	using ReverseIterator = std::reverse_iterator<Iterator>;
+	using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 	using Reference = std::string&;
 	using ConstReference = const std::string&;
 
@@ -36,4 +42,50 @@ private:
 	size_t m_size{};
 	Node* m_last{};
 	std::unique_ptr<Node> m_first;
+};
+
+class StringListConstIterator
+{
+public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using difference_type = std::ptrdiff_t;
+	using value_type = std::string;
+	using pointer = const value_type*;
+	using reference = const value_type&;
+	using Container = StringList;
+	using NodePtr = Container::Node*;
+	
+	StringListConstIterator() noexcept;
+
+	reference operator*() const noexcept;
+	pointer operator->() const noexcept;
+
+	StringListConstIterator& operator++() noexcept;
+	StringListConstIterator operator++(int) noexcept;
+	StringListConstIterator& operator--() noexcept;
+	StringListConstIterator operator--(int) noexcept;
+
+	friend bool operator==(const StringListConstIterator& left, const StringListConstIterator& right) noexcept;
+	friend bool operator!=(const StringListConstIterator& left, const StringListConstIterator& right) noexcept;
+
+protected:
+	StringListConstIterator(NodePtr ptr, const Container* container) noexcept;
+
+	NodePtr m_ptr;
+	const Container* m_container;
+};
+
+class StringListIterator : public StringListConstIterator
+{
+	friend class StringList;
+
+public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using difference_type = std::ptrdiff_t;
+	using value_type = std::string;
+	using pointer = value_type*;
+	using reference = value_type&;
+	using Container = StringList;
+
+private:
 };

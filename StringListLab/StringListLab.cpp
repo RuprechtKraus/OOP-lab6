@@ -8,4 +8,7 @@ int main()
 	std::string str1("First string");
 	std::string str2("Second string");
 	std::string str3("Third string");
+
+	std::list<int> lt;
+	lt.begin();
 }

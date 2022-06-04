@@ -1,6 +1,8 @@
 #include "StringList.h"
 #include <iostream>
 
+#pragma region StringList
+
 StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)
 	: m_data(data)
 	, m_prev(prev)
@@ -61,6 +63,8 @@ void StringList::Clear() noexcept
 	{
 		m_first = std::move(m_first->m_next);
 	}
+
+	m_size = 0;
 }
 
 bool StringList::IsEmpty() const noexcept
@@ -96,3 +100,61 @@ size_t StringList::GetSize() const noexcept
 {
 	return m_size;
 }
+
+#pragma endregion StringList
+
+#pragma region StringListConstIterator
+
+StringListConstIterator::StringListConstIterator() noexcept
+	: m_ptr(nullptr)
+	, m_container(nullptr)
+{
+}
+
+StringListConstIterator::StringListConstIterator(NodePtr ptr, const Container* container) noexcept
+	: m_ptr(ptr)
+	, m_container(container)
+{
+}
+
+StringListConstIterator::reference StringListConstIterator::operator*() const noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListConstIterator::pointer StringListConstIterator::operator->() const noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListConstIterator& StringListConstIterator::operator++() noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListConstIterator StringListConstIterator::operator++(int) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListConstIterator& StringListConstIterator::operator--() noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+StringListConstIterator StringListConstIterator::operator--(int) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+bool operator==(const StringListConstIterator& left, const StringListConstIterator& right) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+bool operator!=(const StringListConstIterator& left, const StringListConstIterator& right) noexcept
+{
+	throw std::logic_error("Method is not implemented");
+}
+
+#pragma endregion StringListConstIterator
