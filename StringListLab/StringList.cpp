@@ -185,22 +185,37 @@ StringListConstIterator::reference StringListConstIterator::operator*() const no
 
 StringListConstIterator::pointer StringListConstIterator::operator->() const noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	return &(**this);
 }
 
 StringListConstIterator& StringListConstIterator::operator++() noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	_STL_ASSERT(m_container, "Cannot increment value-initialized list iterator");
+	_STL_ASSERT(m_ptr != m_container->m_last, "Cannot increment end list iterator");
+	this->m_ptr = this->m_ptr->m_next.get();
+	return *this;
 }
 
 StringListConstIterator StringListConstIterator::operator++(int) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	StringListConstIterator tmp{ *this };
+	++*this;
+	return tmp;
 }
 
 StringListConstIterator& StringListConstIterator::operator--() noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	_STL_ASSERT(m_container, "Cannot decrement value-initialized list iterator");
+	_STL_ASSERT(m_ptr != m_container->m_first.get(), "Cannot decrement begin list iterator");
+	if (m_ptr == nullptr)
+	{
+		this->m_ptr = m_container->m_last;
+	}
+	else
+	{
+		this->m_ptr = this->m_ptr->m_prev;
+	}
+	return *this;
 }
 
 StringListConstIterator StringListConstIterator::operator--(int) noexcept
