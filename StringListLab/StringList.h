@@ -37,7 +37,7 @@ public:
 	void PopFront() noexcept;
 	bool IsEmpty() const noexcept;
 	Iterator Insert(ConstIterator position, const std::string& str);
-	Iterator Erase(ConstIterator position);
+	Iterator Erase(ConstIterator position) noexcept;
 	Reference GetBack() noexcept;
 	ConstReference GetBack() const noexcept;
 	Reference GetFront() noexcept;

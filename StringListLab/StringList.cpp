@@ -8,12 +8,10 @@ StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node
 	, m_prev(prev)
 	, m_next(std::move(next))
 {
-	std::cout << "Node with value \"" << m_data << "\" has been created" << std::endl;
 }
 
 StringList::Node::~Node() noexcept
 {
-	std::cout << "Node with value \"" << m_data << "\" has been destroyed" << std::endl;
 }
 
 StringList::~StringList() noexcept
@@ -29,6 +27,67 @@ void StringList::PushBack(const std::string& str)
 void StringList::PushFront(const std::string& str)
 {
 	EmplaceFront(str);
+}
+
+void StringList::Clear() noexcept
+{
+	while (m_first)
+	{
+		m_first = std::move(m_first->m_next);
+	}
+
+	m_size = 0;
+}
+
+void StringList::PopBack() noexcept
+{
+	_STL_ASSERT(m_size != 0, "PopBack called on empty list");
+	EraseBack();
+}
+
+void StringList::PopFront() noexcept
+{
+	_STL_ASSERT(m_size != 0, "PopFront called on empty list");
+	EraseFront();
+}
+
+bool StringList::IsEmpty() const noexcept
+{
+	return !m_first.get();
+}
+
+StringList::Iterator StringList::Insert(ConstIterator position, const std::string& str)
+{
+	_STL_VERIFY(position.m_container == this, "List insert iterator outside range");
+	if (position.m_ptr == m_first.get())
+	{
+		return MakeIterator(EmplaceFront(str));
+	}
+	else if (position.m_ptr == nullptr)
+	{
+		return MakeIterator(EmplaceBack(str));
+	}
+	else
+	{
+		return MakeIterator(Emplace(str, position.m_ptr));
+	}
+}
+
+StringList::Iterator StringList::Erase(ConstIterator position) noexcept
+{
+	_STL_VERIFY(position.m_container == this, "List erase iterator outside range");
+	if (position.m_ptr == m_first.get())
+	{
+		return MakeIterator(EraseFront());
+	}
+	else if (position.m_ptr == m_last)
+	{
+		return MakeIterator(EraseBack());
+	}
+	else
+	{
+		return MakeIterator(Erase(position.m_ptr));
+	}
 }
 
 StringList::NodePtr StringList::EmplaceBack(const std::string& str)
@@ -81,28 +140,6 @@ StringList::NodePtr StringList::Emplace(const std::string& str, NodePtr position
 	return newNode;
 }
 
-void StringList::Clear() noexcept
-{
-	while (m_first)
-	{
-		m_first = std::move(m_first->m_next);
-	}
-
-	m_size = 0;
-}
-
-void StringList::PopBack() noexcept
-{
-	_STL_ASSERT(m_size != 0, "PopBack called on empty list");
-	EraseBack();
-}
-
-void StringList::PopFront() noexcept
-{
-	_STL_ASSERT(m_size != 0, "PopFront called on empty list");
-	EraseFront();
-}
-
 StringList::NodePtr StringList::EraseBack() noexcept
 {
 	m_last = m_last->m_prev;
@@ -126,55 +163,6 @@ StringList::NodePtr StringList::Erase(NodePtr position) noexcept
 	position->m_prev->m_next = std::move(position->m_next);
 	m_size--;
 	return node;
-}
-
-bool StringList::IsEmpty() const noexcept
-{
-	return !m_first.get();
-}
-
-StringList::Iterator StringList::Insert(ConstIterator position, const std::string& str)
-{
-	_STL_VERIFY(position.m_container == this, "List insert iterator outside range");
-	if (position.m_ptr == m_first.get())
-	{
-		return MakeIterator(EmplaceFront(str));
-	}
-	else if (position.m_ptr == nullptr)
-	{
-		return MakeIterator(EmplaceBack(str));
-	}
-	else
-	{
-		return MakeIterator(Emplace(str, position.m_ptr));
-	}
-}
-
-StringList::Iterator StringList::MakeIterator(NodePtr ptr) const noexcept
-{
-	return Iterator(ptr, this);
-}
-
-StringList::ConstIterator StringList::MakeConstIterator(NodePtr ptr) const noexcept
-{
-	return ConstIterator(ptr, this);
-}
-
-StringList::Iterator StringList::Erase(ConstIterator position)
-{
-	_STL_VERIFY(position.m_container == this, "List erase iterator outside range");
-	if (position.m_ptr == m_first.get())
-	{
-		return MakeIterator(EraseFront());
-	}
-	else if (position.m_ptr == m_last)
-	{
-		return MakeIterator(EraseBack());
-	}
-	else
-	{
-		return MakeIterator(Erase(position.m_ptr));
-	}
 }
 
 std::string& StringList::GetBack() noexcept
@@ -204,6 +192,16 @@ const std::string& StringList::GetFront() const noexcept
 size_t StringList::GetSize() const noexcept
 {
 	return m_size;
+}
+
+StringList::Iterator StringList::MakeIterator(NodePtr ptr) const noexcept
+{
+	return Iterator(ptr, this);
+}
+
+StringList::ConstIterator StringList::MakeConstIterator(NodePtr ptr) const noexcept
+{
+	return ConstIterator(ptr, this);
 }
 
 StringList::Iterator StringList::begin() noexcept
