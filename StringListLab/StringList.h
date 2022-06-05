@@ -33,13 +33,15 @@ public:
 	void PushBack(const std::string& str);
 	void PushFront(const std::string& str);
 	void Clear() noexcept;
+	void PopBack() noexcept;
+	void PopFront() noexcept;
 	bool IsEmpty() const noexcept;
 	Iterator Insert(ConstIterator position, const std::string& str);
 	Iterator Erase(ConstIterator position);
-	Reference GetBackElement() noexcept;
-	ConstReference GetBackElement() const noexcept;
-	Reference GetFrontElement() noexcept;
-	ConstReference GetFrontElement() const noexcept;
+	Reference GetBack() noexcept;
+	ConstReference GetBack() const noexcept;
+	Reference GetFront() noexcept;
+	ConstReference GetFront() const noexcept;
 	size_t GetSize() const noexcept;
 
 	Iterator begin() noexcept;
@@ -59,6 +61,9 @@ private:
 	NodePtr EmplaceFront(const std::string& str);
 	NodePtr EmplaceBack(const std::string& str);
 	NodePtr Emplace(const std::string& str, NodePtr position);
+	NodePtr EraseFront() noexcept;
+	NodePtr EraseBack() noexcept;
+	NodePtr Erase(NodePtr position) noexcept;
 	Iterator MakeIterator(NodePtr ptr) const noexcept;
 	ConstIterator MakeConstIterator(NodePtr ptr) const noexcept;
 

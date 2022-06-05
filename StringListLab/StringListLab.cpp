@@ -24,15 +24,19 @@ int main()
 	std::string str3("Third string");
 	list.PushBack(str1);
 	list.PushBack(str2);
-	auto it{ list.Insert(++list.begin(), str3) };
+	list.PushBack(str3);
 
-	 /*std::cout << std::endl;
+	auto it{ list.Erase(++list.begin()) };
+	std::cout << *it << std::endl;
 
-	 for (const auto& str : list)
-	 {
-		 std::cout << str << " ";
-	 }
-	 std::cout << std::endl;
+	/*list.PopFront();
+	std::cout << std::endl;
 
-	 std::cout << "" << std::endl;*/
+	for (const auto& str : list)
+	{
+		std::cout << str << " ";
+	}
+	std::cout << std::endl;
+
+	std::cout << "" << std::endl;*/
 }

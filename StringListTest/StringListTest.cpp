@@ -15,12 +15,12 @@ void VerifyStringList(const StringList& list, size_t expectedSize, bool expected
 
 	if (expectedFront)
 	{
-		Assert::AreEqual(expectedFront.value(), list.GetFrontElement(), L"Actual front element doesn't match expected");
+		Assert::AreEqual(expectedFront.value(), list.GetFront(), L"Actual front element doesn't match expected");
 	}
 
 	if (expectedBack)
 	{
-		Assert::AreEqual(expectedBack.value(), list.GetBackElement(), L"Actual back element doesn't match expected");
+		Assert::AreEqual(expectedBack.value(), list.GetBack(), L"Actual back element doesn't match expected");
 	}
 }
 
@@ -36,7 +36,7 @@ namespace StringListTest
 			VerifyStringList(list, 0, true, std::nullopt, std::nullopt);
 		}
 
-		TEST_METHOD(GetBackElement)
+		TEST_METHOD(GetBackAndFrontElements)
 		{
 			StringList list;
 			std::string str1("First string");
@@ -44,8 +44,8 @@ namespace StringListTest
 			list.PushBack(str1);
 			list.PushBack(str2);
 
-			Assert::AreEqual(str1, list.GetFrontElement(), L"Actual front element doesn't match expected");
-			Assert::AreEqual(str2, list.GetBackElement(), L"Actual back element doesn't match expected");
+			Assert::AreEqual(str1, list.GetFront(), L"Actual front element doesn't match expected");
+			Assert::AreEqual(str2, list.GetBack(), L"Actual back element doesn't match expected");
 		}
 
 		TEST_METHOD(PushBackOneElement)
@@ -97,6 +97,30 @@ namespace StringListTest
 			list.Clear();
 
 			VerifyStringList(list, 0, true, std::nullopt, std::nullopt);
+		}
+
+		TEST_METHOD(PopBack)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+
+			list.PushBack(str1);
+			list.PushBack(str2);
+			list.PopBack();
+			VerifyStringList(list, 1, false, str1, str1);
+		}
+
+		TEST_METHOD(PopFront)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+
+			list.PushBack(str1);
+			list.PushBack(str2);
+			list.PopFront();
+			VerifyStringList(list, 1, false, str2, str2);
 		}
 
 		TEST_METHOD(InsertElementInTheBeginning)
@@ -169,6 +193,60 @@ namespace StringListTest
 			auto it{ list.Insert(++list.begin(), str3) };
 
 			Assert::AreEqual(str2, *(++it), L"Incremented returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(DecrementReturnedIteratorAfterInsertingElementInTheMiddle)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			std::string str3("Third string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			auto it{ list.Insert(++list.begin(), str3) };
+
+			Assert::AreEqual(str1, *(--it), L"Incremented returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(EraseInTheBeginning)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			auto it{ list.Erase(list.begin()) };
+
+			VerifyStringList(list, 1, false, str2, str2);
+			Assert::AreEqual(str2, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(EraseInTheEnd)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			auto it{ list.Erase(--list.end()) };
+
+			VerifyStringList(list, 1, false, str1, str1);
+			Assert::IsTrue(list.end() == it, L"Returned iterator doesn't point to end");
+		}
+
+		TEST_METHOD(EraseInTheMiddle)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			std::string str3("Third string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			list.PushBack(str3);
+			auto it{ list.Erase(++list.begin()) };
+
+			VerifyStringList(list, 2, false, str1, str3);
+			Assert::AreEqual(str3, *it, L"Returned iterator points to wrong element");
 		}
 	};
 

@@ -91,6 +91,43 @@ void StringList::Clear() noexcept
 	m_size = 0;
 }
 
+void StringList::PopBack() noexcept
+{
+	_STL_ASSERT(m_size != 0, "PopBack called on empty list");
+	EraseBack();
+}
+
+void StringList::PopFront() noexcept
+{
+	_STL_ASSERT(m_size != 0, "PopFront called on empty list");
+	EraseFront();
+}
+
+StringList::NodePtr StringList::EraseBack() noexcept
+{
+	m_last = m_last->m_prev;
+	m_last->m_next = nullptr;
+	m_size--;
+	return nullptr;
+}
+
+StringList::NodePtr StringList::EraseFront() noexcept
+{
+	m_first = std::move(m_first->m_next);
+	m_first->m_prev = nullptr;
+	m_size--;
+	return m_first.get();
+}
+
+StringList::NodePtr StringList::Erase(NodePtr position) noexcept
+{
+	Node* node{ position->m_next.get() };
+	position->m_next->m_prev = position->m_prev;
+	position->m_prev->m_next = std::move(position->m_next);
+	m_size--;
+	return node;
+}
+
 bool StringList::IsEmpty() const noexcept
 {
 	return !m_first.get();
@@ -125,28 +162,40 @@ StringList::ConstIterator StringList::MakeConstIterator(NodePtr ptr) const noexc
 
 StringList::Iterator StringList::Erase(ConstIterator position)
 {
-	throw std::logic_error("Method is not implemented");
+	_STL_VERIFY(position.m_container == this, "List erase iterator outside range");
+	if (position.m_ptr == m_first.get())
+	{
+		return MakeIterator(EraseFront());
+	}
+	else if (position.m_ptr == m_last)
+	{
+		return MakeIterator(EraseBack());
+	}
+	else
+	{
+		return MakeIterator(Erase(position.m_ptr));
+	}
 }
 
-std::string& StringList::GetBackElement() noexcept
+std::string& StringList::GetBack() noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetBackElement called on empty list");
 	return m_last->m_data;
 }
 
-const std::string& StringList::GetBackElement() const noexcept
+const std::string& StringList::GetBack() const noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetBackElement called on empty list");
 	return m_last->m_data;
 }
 
-std::string& StringList::GetFrontElement() noexcept
+std::string& StringList::GetFront() noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetFrontElement called on empty list");
 	return m_first->m_data;
 }
 
-const std::string& StringList::GetFrontElement() const noexcept
+const std::string& StringList::GetFront() const noexcept
 {
 	_STL_ASSERT(m_size != 0, "GetFrontElement called on empty list");
 	return m_first->m_data;
