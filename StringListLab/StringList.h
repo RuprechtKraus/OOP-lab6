@@ -26,6 +26,7 @@ public:
 	using ValueType = std::string;
 	using Reference = ValueType&;
 	using ConstReference = const ValueType&;
+	using NodePtr = Node*;
 
 	~StringList() noexcept;
 
@@ -33,6 +34,8 @@ public:
 	void PushFront(const std::string& str);
 	void Clear() noexcept;
 	bool IsEmpty() const noexcept;
+	Iterator Insert(ConstIterator position, const std::string& str);
+	Iterator Erase(ConstIterator position);
 	Reference GetBackElement() noexcept;
 	ConstReference GetBackElement() const noexcept;
 	Reference GetFrontElement() noexcept;
@@ -53,6 +56,12 @@ public:
 	ConstReverseIterator crend() const noexcept;
 
 private:
+	NodePtr EmplaceFront(const std::string& str);
+	NodePtr EmplaceBack(const std::string& str);
+	NodePtr Emplace(const std::string& str, NodePtr position);
+	Iterator MakeIterator(NodePtr ptr) const noexcept;
+	ConstIterator MakeConstIterator(NodePtr ptr) const noexcept;
+
 	size_t m_size{};
 	Node* m_last{};
 	std::unique_ptr<Node> m_first;
@@ -69,7 +78,7 @@ public:
 	using pointer = const value_type*;
 	using reference = const value_type&;
 	using Container = StringList;
-	using NodePtr = Container::Node*;
+	using NodePtr = Container::NodePtr;
 
 	StringListConstIterator() noexcept;
 
@@ -102,6 +111,7 @@ public:
 	using pointer = value_type*;
 	using reference = value_type&;
 	using Container = StringList;
+	using NodePtr = Container::NodePtr;
 	using MyBase = StringListConstIterator;
 
 	StringListIterator() noexcept;

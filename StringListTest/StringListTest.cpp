@@ -98,6 +98,78 @@ namespace StringListTest
 
 			VerifyStringList(list, 0, true, std::nullopt, std::nullopt);
 		}
+
+		TEST_METHOD(InsertElementInTheBeginning)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			auto it{ list.Insert(list.begin(), str2) };
+			
+			VerifyStringList(list, 2, false, str2, str1);
+			Assert::AreEqual(str2, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(InsertElementInTheEnd)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			auto it{ list.Insert(list.end(), str2) };
+
+			VerifyStringList(list, 2, false, str1, str2);
+			Assert::AreEqual(str2, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(InsertElementInTheMiddle)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			std::string str3("Third string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			auto it{ list.Insert(++list.begin(), str3) };
+
+			VerifyStringList(list, 3, false, str1, str2);
+			Assert::AreEqual(*(++list.begin()), str3, L"Actual second element doesn't match expected");
+			Assert::AreEqual(str3, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(InsertElementInTheBeginningOfEmptyList)
+		{
+			StringList list;
+			std::string str1("First string");
+			auto it{ list.Insert(list.begin(), str1) };
+
+			VerifyStringList(list, 1, false, str1, str1);
+			Assert::AreEqual(str1, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(InsertElementInTheEndOfEmptyList)
+		{
+			StringList list;
+			std::string str1("First string");
+			auto it{ list.Insert(list.end(), str1) };
+
+			VerifyStringList(list, 1, false, str1, str1);
+			Assert::AreEqual(str1, *it, L"Returned iterator points to wrong element");
+		}
+
+		TEST_METHOD(IncrementReturnedIteratorAfterInsertingElementInTheMiddle)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			std::string str3("Third string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			auto it{ list.Insert(++list.begin(), str3) };
+
+			Assert::AreEqual(str2, *(++it), L"Incremented returned iterator points to wrong element");
+		}
 	};
 
 	TEST_CLASS(StringListConstIteratorTest)

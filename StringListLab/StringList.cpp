@@ -23,6 +23,16 @@ StringList::~StringList() noexcept
 
 void StringList::PushBack(const std::string& str)
 {
+	EmplaceBack(str);
+}
+
+void StringList::PushFront(const std::string& str)
+{
+	EmplaceFront(str);
+}
+
+StringList::NodePtr StringList::EmplaceBack(const std::string& str)
+{
 	auto node{ std::make_unique<Node>(str, m_last, nullptr) };
 	Node* newLast{ node.get() };
 
@@ -37,9 +47,10 @@ void StringList::PushBack(const std::string& str)
 	m_last = newLast;
 
 	m_size++;
+	return m_last;
 }
 
-void StringList::PushFront(const std::string& str)
+StringList::NodePtr StringList::EmplaceFront(const std::string& str)
 {
 	auto node{ std::make_unique<Node>(str, nullptr, std::move(m_first)) };
 	Node* newFirst{ node.get() };
@@ -55,6 +66,19 @@ void StringList::PushFront(const std::string& str)
 	}
 
 	m_size++;
+	return m_first.get();
+}
+
+StringList::NodePtr StringList::Emplace(const std::string& str, NodePtr position)
+{
+	auto node{ std::make_unique<Node>(str, position->m_prev, std::move(position->m_prev->m_next)) };
+	Node* newNode{ node.get() };
+
+	newNode->m_prev->m_next = std::move(node);
+	newNode->m_next->m_prev = newNode;
+	m_size++;
+
+	return newNode;
 }
 
 void StringList::Clear() noexcept
@@ -70,6 +94,38 @@ void StringList::Clear() noexcept
 bool StringList::IsEmpty() const noexcept
 {
 	return !m_first.get();
+}
+
+StringList::Iterator StringList::Insert(ConstIterator position, const std::string& str)
+{
+	_STL_VERIFY(position.m_container == this, "List insert iterator outside range");
+	if (position.m_ptr == m_first.get())
+	{
+		return MakeIterator(EmplaceFront(str));
+	}
+	else if (position.m_ptr == nullptr)
+	{
+		return MakeIterator(EmplaceBack(str));
+	}
+	else
+	{
+		return MakeIterator(Emplace(str, position.m_ptr));
+	}
+}
+
+StringList::Iterator StringList::MakeIterator(NodePtr ptr) const noexcept
+{
+	return Iterator(ptr, this);
+}
+
+StringList::ConstIterator StringList::MakeConstIterator(NodePtr ptr) const noexcept
+{
+	return ConstIterator(ptr, this);
+}
+
+StringList::Iterator StringList::Erase(ConstIterator position)
+{
+	throw std::logic_error("Method is not implemented");
 }
 
 std::string& StringList::GetBackElement() noexcept
