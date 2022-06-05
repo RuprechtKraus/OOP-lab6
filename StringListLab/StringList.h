@@ -23,8 +23,9 @@ public:
 	using ConstIterator = StringListConstIterator;
 	using ReverseIterator = std::reverse_iterator<Iterator>;
 	using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
-	using Reference = std::string&;
-	using ConstReference = const std::string&;
+	using ValueType = std::string;
+	using Reference = ValueType&;
+	using ConstReference = const ValueType&;
 
 	~StringList() noexcept;
 
@@ -101,6 +102,7 @@ public:
 	using pointer = value_type*;
 	using reference = value_type&;
 	using Container = StringList;
+	using MyBase = StringListConstIterator;
 
 	StringListIterator() noexcept;
 

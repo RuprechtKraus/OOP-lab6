@@ -253,32 +253,38 @@ StringListIterator::StringListIterator(NodePtr ptr, const Container* container) 
 
 StringListIterator::reference StringListIterator::operator*() const noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	return const_cast<reference>(MyBase::operator*());
 }
 
 StringListIterator::pointer StringListIterator::operator->() const noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	return &(**this);
 }
 
 StringListIterator& StringListIterator::operator++() noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	MyBase::operator++();
+	return *this;
 }
 
 StringListIterator StringListIterator::operator++(int) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	StringListIterator tmp{ *this };
+	MyBase::operator++();
+	return tmp;
 }
 
 StringListIterator& StringListIterator::operator--() noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	MyBase::operator--();
+	return *this;
 }
 
 StringListIterator StringListIterator::operator--(int) noexcept
 {
-	throw std::logic_error("Method is not implemented");
+	StringListIterator tmp{ *this };
+	MyBase::operator--();
+	return tmp;
 }
 
 #pragma endregion StringListIterator
