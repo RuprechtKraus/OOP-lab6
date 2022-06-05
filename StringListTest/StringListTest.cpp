@@ -158,4 +158,57 @@ namespace StringListTest
 			Assert::AreEqual("3 2 1 "s, ss.str(), L"Iteration through list failed");
 		}
 	};
+
+	TEST_CLASS(StringListIteratorTest)
+	{
+		TEST_METHOD(DereferenceIterator)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+
+			Assert::AreEqual(str1, *list.begin(), L"Iterator points to wrong element");
+		}
+
+		TEST_METHOD(ChangeElementValueThroughIterator)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+			*list.begin() = "Third string";
+
+			Assert::AreEqual("Third string"s, *list.begin(), L"Iterator points to wrong element");
+		}
+
+		TEST_METHOD(DereferenceReverseIterator)
+		{
+			StringList list;
+			std::string str1("First string");
+			std::string str2("Second string");
+			list.PushBack(str1);
+			list.PushBack(str2);
+
+			Assert::AreEqual(str2, *list.rbegin(), L"Iterator points to wrong element");
+		}
+
+		TEST_METHOD(IterateThroughMyStringReversively)
+		{
+			StringList list;
+			list.PushBack("1");
+			list.PushBack("2");
+			list.PushBack("3");
+
+			std::ostringstream ss;
+			for (StringList::ConstReverseIterator it = list.rbegin(); it != list.rend(); it++)
+			{
+				ss << *it << " ";
+			}
+
+			Assert::AreEqual("3 2 1 "s, ss.str(), L"Iteration through list failed");
+		}
+	};
 }
