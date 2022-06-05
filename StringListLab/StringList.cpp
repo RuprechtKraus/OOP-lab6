@@ -58,7 +58,7 @@ bool StringList::IsEmpty() const noexcept
 
 StringList::Iterator StringList::Insert(ConstIterator position, const std::string& str)
 {
-	_STL_VERIFY(position.m_container == this, "List insert iterator outside range");
+	_STL_ASSERT(position.m_container == this, "List insert iterator outside range");
 	if (position.m_ptr == m_first.get())
 	{
 		return MakeIterator(EmplaceFront(str));
@@ -75,7 +75,7 @@ StringList::Iterator StringList::Insert(ConstIterator position, const std::strin
 
 StringList::Iterator StringList::Erase(ConstIterator position) noexcept
 {
-	_STL_VERIFY(position.m_container == this, "List erase iterator outside range");
+	_STL_ASSERT(position.m_container == this, "List erase iterator outside range");
 	if (position.m_ptr == m_first.get())
 	{
 		return MakeIterator(EraseFront());
