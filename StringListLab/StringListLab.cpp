@@ -21,7 +21,6 @@ int main()
 	std::list<std::string> lt;
 	lt.push_back("First string in list");
 	lt.push_back("Second string in list");
-	auto lit{ lt.end() };
-	/*--lit;
-	std::cout << *lit << std::endl*/;
+	auto lit{ lt.crbegin() };
+	std::cout << *lit << std::endl;
 }

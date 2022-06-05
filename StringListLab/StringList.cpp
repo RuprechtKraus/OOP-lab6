@@ -192,7 +192,7 @@ StringListConstIterator::pointer StringListConstIterator::operator->() const noe
 StringListConstIterator& StringListConstIterator::operator++() noexcept
 {
 	_STL_ASSERT(m_container, "Cannot increment value-initialized list iterator");
-	_STL_ASSERT(m_ptr != m_container->m_last, "Cannot increment end list iterator");
+	_STL_ASSERT(m_ptr != nullptr, "Cannot increment end list iterator");
 	this->m_ptr = this->m_ptr->m_next.get();
 	return *this;
 }
