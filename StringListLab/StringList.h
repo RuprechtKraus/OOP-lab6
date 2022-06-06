@@ -28,12 +28,13 @@ public:
 	using ConstReference = const ValueType&;
 	using NodePtr = Node*;
 
-	//TODO: Конструктор копирования, перемещения, оператор присваивания, присваивание с перемещением
 	StringList() = default;
 	StringList(const StringList& other);
 	StringList(StringList&& other) noexcept;
+	StringList(ConstIterator begin, ConstIterator end);
 	~StringList() noexcept;
 
+	StringList& operator=(const StringList& other);
 	StringList& operator=(StringList&& other) noexcept;
 
 	void PushBack(const std::string& str);
@@ -42,6 +43,7 @@ public:
 	void PopBack() noexcept;
 	void PopFront() noexcept;
 	bool IsEmpty() const noexcept;
+	void Assign(ConstIterator begin, ConstIterator end);
 	void Swap(StringList& other) noexcept;
 	Iterator Insert(ConstIterator position, const std::string& str);
 	Iterator Erase(ConstIterator position) noexcept;

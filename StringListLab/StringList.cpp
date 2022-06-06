@@ -31,9 +31,23 @@ StringList::StringList(StringList&& other) noexcept
 	Swap(other);
 }
 
+StringList::StringList(ConstIterator begin, ConstIterator end)
+{
+	ConstructRange(begin, end);
+}
+
 StringList::~StringList() noexcept
 {
 	Clear();
+}
+
+StringList& StringList::operator=(const StringList& other)
+{
+	if (&other != this)
+	{
+		Assign(other.begin(), other.end());
+	}
+	return *this;
 }
 
 StringList& StringList::operator=(StringList&& other) noexcept
@@ -48,13 +62,14 @@ StringList& StringList::operator=(StringList&& other) noexcept
 
 void StringList::ConstructRange(ConstIterator begin, ConstIterator end)
 {
-	StringList tmpList;
+	_STL_ASSERT(begin.m_container == end.m_container, "List iterators incompatible");
+	StringList tmp;
 	while (begin != end)
 	{
-		tmpList.PushBack(*begin);
+		tmp.PushBack(*begin);
 		begin++;
 	}
-	Swap(tmpList);
+	Swap(tmp);
 }
 
 void StringList::PushBack(const std::string& str)
@@ -93,6 +108,12 @@ void StringList::PopFront() noexcept
 bool StringList::IsEmpty() const noexcept
 {
 	return !m_first.get();
+}
+
+void StringList::Assign(ConstIterator begin, ConstIterator end)
+{
+	StringList tmp(begin, end);
+	Swap(tmp);
 }
 
 void StringList::Swap(StringList& other) noexcept
