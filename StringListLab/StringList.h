@@ -11,7 +11,6 @@ class StringList
 	{
 	public:
 		Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next);
-		~Node();
 
 		std::string m_data;
 		Node* m_prev{};

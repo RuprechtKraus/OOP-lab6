@@ -8,12 +8,6 @@ StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node
 	, m_prev(prev)
 	, m_next(std::move(next))
 {
-	std::cout << "Node with value \"" << m_data << "\" has been created" << std::endl;
-}
-
-StringList::Node::~Node()
-{
-	std::cout << "Node with value \"" << m_data << "\" has been destroyed" << std::endl;
 }
 
 StringList::StringList(const StringList& other)
