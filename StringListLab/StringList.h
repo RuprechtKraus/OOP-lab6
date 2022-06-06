@@ -11,7 +11,7 @@ class StringList
 	{
 	public:
 		Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next);
-		~Node() noexcept;
+		~Node();
 
 		std::string m_data;
 		Node* m_prev{};
@@ -28,7 +28,12 @@ public:
 	using ConstReference = const ValueType&;
 	using NodePtr = Node*;
 
+	//TODO: Конструктор копирования, перемещения, оператор присваивания, присваивание с перемещением
+	StringList() = default;
+	StringList(StringList&& other) noexcept;
 	~StringList() noexcept;
+
+	StringList& operator=(StringList&& other) noexcept;
 
 	void PushBack(const std::string& str);
 	void PushFront(const std::string& str);
@@ -36,6 +41,7 @@ public:
 	void PopBack() noexcept;
 	void PopFront() noexcept;
 	bool IsEmpty() const noexcept;
+	void Swap(StringList& other) noexcept;
 	Iterator Insert(ConstIterator position, const std::string& str);
 	Iterator Erase(ConstIterator position) noexcept;
 	Reference GetBack() noexcept;
@@ -43,6 +49,7 @@ public:
 	Reference GetFront() noexcept;
 	ConstReference GetFront() const noexcept;
 	size_t GetSize() const noexcept;
+
 
 	Iterator begin() noexcept;
 	Iterator end() noexcept;

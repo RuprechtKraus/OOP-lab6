@@ -1,6 +1,11 @@
 #include "StringList.h"
 #include <iostream>
 
+void swap(StringList& left, StringList& right) noexcept
+{
+	left.Swap(right);
+}
+
 #pragma region StringList
 
 StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)
@@ -8,15 +13,33 @@ StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node
 	, m_prev(prev)
 	, m_next(std::move(next))
 {
+	std::cout << "Node with value \"" << m_data << "\" has been created" << std::endl;
 }
 
-StringList::Node::~Node() noexcept
+StringList::Node::~Node()
 {
+	std::cout << "Node with value \"" << m_data << "\" has been destroyed" << std::endl;
+}
+
+StringList::StringList(StringList&& other) noexcept
+{
+	Swap(other);
 }
 
 StringList::~StringList() noexcept
 {
 	Clear();
+}
+
+StringList& StringList::operator=(StringList&& other) noexcept
+{
+	if (&other != this)
+	{
+		Swap(other);
+		other.Clear();
+	}
+
+	return *this;
 }
 
 void StringList::PushBack(const std::string& str)
@@ -35,6 +58,7 @@ void StringList::Clear() noexcept
 	{
 		m_first = std::move(m_first->m_next);
 	}
+	m_last = nullptr;
 
 	m_size = 0;
 }
@@ -54,6 +78,13 @@ void StringList::PopFront() noexcept
 bool StringList::IsEmpty() const noexcept
 {
 	return !m_first.get();
+}
+
+void StringList::Swap(StringList& other) noexcept
+{
+	std::swap(m_first, other.m_first);
+	std::swap(m_last, other.m_last);
+	std::swap(m_size, other.m_size);
 }
 
 StringList::Iterator StringList::Insert(ConstIterator position, const std::string& str)
