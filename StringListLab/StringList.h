@@ -30,6 +30,7 @@ public:
 
 	//TODO: Конструктор копирования, перемещения, оператор присваивания, присваивание с перемещением
 	StringList() = default;
+	StringList(const StringList& other);
 	StringList(StringList&& other) noexcept;
 	~StringList() noexcept;
 
@@ -50,7 +51,6 @@ public:
 	ConstReference GetFront() const noexcept;
 	size_t GetSize() const noexcept;
 
-
 	Iterator begin() noexcept;
 	Iterator end() noexcept;
 	ConstIterator begin() const noexcept;
@@ -65,6 +65,7 @@ public:
 	ConstReverseIterator crend() const noexcept;
 
 private:
+	void ConstructRange(ConstIterator begin, ConstIterator end);
 	NodePtr EmplaceFront(const std::string& str);
 	NodePtr EmplaceBack(const std::string& str);
 	NodePtr Emplace(const std::string& str, NodePtr position);

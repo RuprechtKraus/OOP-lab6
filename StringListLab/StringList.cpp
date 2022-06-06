@@ -21,6 +21,11 @@ StringList::Node::~Node()
 	std::cout << "Node with value \"" << m_data << "\" has been destroyed" << std::endl;
 }
 
+StringList::StringList(const StringList& other)
+{
+	ConstructRange(other.begin(), other.end());
+}
+
 StringList::StringList(StringList&& other) noexcept
 {
 	Swap(other);
@@ -38,8 +43,18 @@ StringList& StringList::operator=(StringList&& other) noexcept
 		Swap(other);
 		other.Clear();
 	}
-
 	return *this;
+}
+
+void StringList::ConstructRange(ConstIterator begin, ConstIterator end)
+{
+	StringList tmpList;
+	while (begin != end)
+	{
+		tmpList.PushBack(*begin);
+		begin++;
+	}
+	Swap(tmpList);
 }
 
 void StringList::PushBack(const std::string& str)
