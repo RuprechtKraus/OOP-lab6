@@ -1,11 +1,6 @@
 #include "StringList.h"
 #include <iostream>
 
-void swap(StringList& left, StringList& right) noexcept
-{
-	left.Swap(right);
-}
-
 #pragma region StringList
 
 StringList::Node::Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)

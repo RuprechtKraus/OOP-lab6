@@ -24,8 +24,16 @@ void VerifyStringList(const StringList& list, size_t expectedSize, bool expected
 	}
 }
 
+bool AreListsEqual(const StringList& left, const StringList& right)
+{
+	return std::equal(left.cbegin(), left.cend(), right.cbegin(), right.cend());
+}
+
 namespace StringListTest
 {
+	#pragma warning(push)
+	#pragma warning(disable: 26800)
+
 	TEST_CLASS(StringListTest)
 	{
 	public:
@@ -34,6 +42,96 @@ namespace StringListTest
 		{
 			StringList list;
 			VerifyStringList(list, 0, true, std::nullopt, std::nullopt);
+		}
+
+		TEST_METHOD(CopyConstruct)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2(l1);
+			VerifyStringList(l2, 3, false, "1", "3");
+			Assert::IsTrue(AreListsEqual(l1, l2), L"Lists aren't equal");
+		}
+
+		TEST_METHOD(MoveConstruct)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2(std::move(l1));
+			VerifyStringList(l1, 0, true, std::nullopt, std::nullopt);
+			VerifyStringList(l2, 3, false, "1", "3");
+		}
+
+		TEST_METHOD(CopyAssign)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2 = l1;
+			VerifyStringList(l2, 3, false, "1", "3");
+			Assert::IsTrue(AreListsEqual(l1, l2), L"Lists aren't equal");
+		}
+
+		TEST_METHOD(MoveAssign)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2 = std::move(l1);
+			VerifyStringList(l1, 0, true, std::nullopt, std::nullopt);
+			VerifyStringList(l2, 3, false, "1", "3");
+		}
+		
+		TEST_METHOD(RangeConstruct)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+			l1.PushBack("4");
+			l1.PushBack("5");
+
+			StringList l2(++l1.begin(), --l1.end());
+			VerifyStringList(l2, 3, false, "2", "4");
+		}
+
+		TEST_METHOD(AssignMethod)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2;
+			l2.Assign(l1.cbegin(), l1.cend());
+			VerifyStringList(l2, 3, false, "1", "3");
+			Assert::IsTrue(AreListsEqual(l1, l2), L"Lists aren't equal");
+		}
+
+		TEST_METHOD(SwapMethod)
+		{
+			StringList l1;
+			l1.PushBack("1");
+			l1.PushBack("2");
+			l1.PushBack("3");
+
+			StringList l2;
+			l2.PushBack("4");
+			l2.PushBack("5");
+
+			l1.Swap(l2);
+			VerifyStringList(l1, 2, false, "4", "5");
+			VerifyStringList(l2, 3, false, "1", "3");
 		}
 
 		TEST_METHOD(GetBackAndFrontElements)
@@ -361,4 +459,6 @@ namespace StringListTest
 			Assert::AreEqual("3 2 1 "s, ss.str(), L"Iteration through list failed");
 		}
 	};
+
+	#pragma warning(pop)
 }
